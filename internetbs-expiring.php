@@ -1,8 +1,8 @@
 <?php
-require_once 'Helpers.php';
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
+/* require_once 'Helpers.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 
 $remindInDays = [0,1,7,14,30,60];
 
@@ -54,7 +54,7 @@ foreach($remindInDays as $remainingDays) :
                 'expiration' => '2020/02/01',
                 'status' => ''
             ] 
-        ];*/
+        ];
 
         if(is_array($resultInternetbs->domain) AND sizeof($resultInternetbs->domain)) :
         //if( is_array( $hardCodeResult ) AND sizeof( $hardCodeResult ) ) :
@@ -88,12 +88,12 @@ foreach($remindInDays as $remainingDays) :
                                 'X-Mailer' => 'PHP/' . phpversion()
                             ];
 
-/*                             $sql = "SELECT P.customer, P.item, P.amount, P.category, P.notify_on, C.fname, C.email, C.phone 
+                            $sql = "SELECT P.customer, P.item, P.amount, P.category, P.notify_on, C.fname, C.email, C.phone 
                             FROM products AS P INNER JOIN customers AS C ON P.customer = C.id WHERE P.item = :item";
 
                             $connection = dbConnect('mysql:host=localhost;dbname=gagraphi_demo', 'gagraphi_uza', 'bmehjBc9');
                             $rows = getRows($connection, $sql, $domain->name, 'prepare');
-                            $connection = null; */
+                            $connection = null;
 
                             $domain_name = str_replace('.','-',$domain_>name);
 
@@ -188,7 +188,7 @@ foreach($remindInDays as $remainingDays) :
 
                                 if( !mail($email, sprintf("%s notice", $service), $msg, $headers)) echo 'Notification not sent';
 
-                            endforeach; */
+                            endforeach;
                             //For debugging
                             //echo "Hi David, <br/>Your domain {$domain->name} {$label}, on {$domain->expiration}<br/>Please submit your payment to avoid inconveniences.";
                             
@@ -198,4 +198,4 @@ foreach($remindInDays as $remainingDays) :
             endforeach;
         endif;
     endif;
-endforeach;
+endforeach; */
