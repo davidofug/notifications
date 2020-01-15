@@ -51,7 +51,6 @@ foreach($remindInDays as $remainingDays) :
                 
                 foreach($resultInternetbs->domain as $domain) :
                                       
-                    
                     if('Deleted' !== $domain->status) :
                         
                         if('Expired' !== $domain->status) :
@@ -62,11 +61,11 @@ foreach($remindInDays as $remainingDays) :
                             
                             $remainingDaysToExpire = dateDiff($today, $expiration);
                             
-                            // echo $domain->name,' ',$domain->status,' date ', $expiration,' - days ', $remainingDaysToExpire,'<br/>';
+                            //$domain->name,' ',$domain->status,' date ', $expiration,' - days ', $remainingDaysToExpire,'<br/>';
 
                             if($remainingDaysToExpire >= 0 AND $remainingDaysToExpire == $remainingDays) :
                                 
-                                printf("<p> {$domain->name} expires in {$remainingDays} status {$domain->status} expires on {$domain->expiration}</p>");
+                                //printf("<p> {$domain->name} expires in {$remainingDays} status {$domain->status} expires on {$domain->expiration}</p>");
                                 
                                 $expireStatement = ['has expired','is expiring in 1 day',"will expire in {$remainingDays} days"];
 
