@@ -70,7 +70,7 @@ function getRows( $connection, string $sql, string $item= null, string $queryTyp
 
     $stm = $connection->{$queryType}($sql);
 
-    if($item ) :
+    if($item) :
         $stm->bindParam(":item", $item, PDO::PARAM_STR);
         $stm->execute();
     endif;
