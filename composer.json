@@ -1,0 +1,21 @@
+{
+    "name": "gagawala/notifications",
+    "description": "Let's continue to notify clients about the expiry of their services.",
+    "type": "project",
+    "require": {
+        "sendgrid/sendgrid": "dev-master"
+    },
+    "authors": [{
+        "name": "David Wampamba",
+        "email": "chat@david.ug"
+    }],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app"
+        },
+        "files": [
+            "app/inc/Helpers.php"
+        ]
+    }
+}

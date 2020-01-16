@@ -92,6 +92,8 @@ foreach($remindInDays as $remainingDays) :
 
                                     $details = json_decode($responseCRM);
 
+                                    //objectPrettyPrint($details);
+
                                     $msg = sprintf('
                                         <p>Hi %s,<br/></p>
         
@@ -122,7 +124,12 @@ foreach($remindInDays as $remainingDays) :
                                         $payStr
                                     );
 
-                                    if( !mail($details->email, sprintf("%s notice", $details->category), $msg, $headers)) echo 'Notification not sent';
+                                   // echo $msg,'<br/>';
+
+                                    if( !mail($details->customers->email, sprintf("%s notice", $details->category), $msg, $headers)) :
+                                        print_r(error_get_last());
+                                        echo ' Notification not sent<br/>';
+                                    endif;
 
                                 endif;
                             
