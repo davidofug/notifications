@@ -1,13 +1,15 @@
 <?php
-// echo 'Starting script<br/>';
+require_once '../vendor/autoload.php';
 
-require_once 'Helpers.php';
+//echo 'Starting script<br/>';
 
-// error_reporting(E_ALL);
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
 
-$remindInDays = [1,7,14,30,60];
+//logToEmail($email='davidwampamba@gmail.com');
+
+$remindInDays = [1,6,14,30,60];
 
 $sqlInstructions = "SELECT * FROM payment_instructions WHERE status = 1";
 $connection = dbConnect('mysql:host=localhost;dbname=gagraphi_demo', 'gagraphi_uza', 'jkEluFfan7dK');
@@ -34,6 +36,7 @@ foreach($remindInDays as $remainingDays) :
             'ResponseFormat' => 'JSON'
         ]
     );
+
 
     $responseInternetbs = curl_exec( $sessionInternetbs );
     $errorInternetbs = curl_error( $sessionInternetbs );
@@ -69,16 +72,6 @@ foreach($remindInDays as $remainingDays) :
                                 
                                 $expireStatement = ['has expired','is expiring in 1 day',"will expire in {$remainingDays} days"];
 
-                                $from = 'Gagawala <hello@gagawala.com>';
-
-                                $headers = [
-                                    'Content-type' => 'text/html; charset=iso-8859-1',
-                                    'IME-Version' => '1.0',
-                                    'From' => $from,
-                                    'Reply-To' => $from,
-                                    'X-Mailer' => 'PHP/' . phpversion()
-                                ];
-
                                 $domain_name = str_replace('.','-',$domain->name);
 
                                 $sessionCRM = curlSession("https://gagawala.com/minicrm/wp-json/api/v1/product/$domain_name",'GET',[]);
@@ -92,9 +85,33 @@ foreach($remindInDays as $remainingDays) :
 
                                     $details = json_decode($responseCRM);
 
-                                    //objectPrettyPrint($details);
+                                    $msgPlainText = sprintf("
+                                        Hi %s,\n        
+                                        The %s (%s) service %s on %s.
+        
+                                        You\'re advised to submit a payment amount <b>UGX%s/=</b> as soon as possible to avoid service interruptions.\n
+                                        Ignore this noification if you\'ve already submitted your payment
+                                        Choose how you like to send payment and send.
+                                        %s
+                                
+                                        Note: For urgent reinstatement of service, inform us by replying to this email with your payment receipt or transaction ID.\n
+                                        Activation of expired services
+                                        40%% extra charge after 30 days expiry.
+                                        UGX250,000/= extra charge after 60 days expiry.
+                                    
+        
+                                        Thank you,\nGagawala\nManagement
+                                        ", 
+                                        $details->customer->first_name,
+                                        $details->category,
+                                        $domain->name,
+                                        $expireStatement[($remainingDaysToExpire < 2) ? $remainingDaysToExpire : 2],
+                                        $domain->expiration,
+                                        $details->fee,
+                                        strip_tags(str_replace("<br/>", "\n", $payStr))
+                                    );
 
-                                    $msg = sprintf('
+                                    $msgHTML = sprintf('
                                         <p>Hi %s,<br/></p>
         
                                         <p>The %s (%s) service %s on <b>%s</b>.</p>
@@ -104,7 +121,7 @@ foreach($remindInDays as $remainingDays) :
                                             Ignore this noification if you\'ve already submitted your payment.<br/>
                                         </p>
         
-                                        <p><b>Choose a preferred payment method below.</b></p>
+                                        <p><b>Choose how you like to send payment and send.</b></p>
                                         %s
                                         <p>
                                             <i><b>Note:</b> For urgent reinstatement of service, inform us by replying to this email with your payment receipt or transaction ID.</i><br/><br/>
@@ -124,12 +141,28 @@ foreach($remindInDays as $remainingDays) :
                                         $payStr
                                     );
 
-                                   // echo $msg,'<br/>';
+                                   $email = new \SendGrid\Mail\Mail();
+                                   $email->setFrom('billing@gagawla.com', "Gagawala");
+                                   $email->setSubject("Service Reminder");
+                                   $email->addTo($details->customer->email, $details->customer->first_name);
+                                   $email->addContent(
+                                       "text/plain", $msgPlainText
+                                   );
+                                   $email->addContent(
+                                       "text/html", $msgHTML
+                                   );
+                                   //$sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+                                   $sendgrid = new \SendGrid('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');
 
-                                    if( !mail($details->customers->email, sprintf("%s notice", $details->category), $msg, $headers)) :
-                                        print_r(error_get_last());
-                                        echo ' Notification not sent<br/>';
-                                    endif;
+                                   try {
+                                       $response = $sendgrid->send($email);
+                                       //print $response->statusCode() . "<br/>";
+                                       //print_r($response->headers());
+                                       //print $response->body() . "<br/>";
+
+                                   } catch (Exception $e) {
+                                       echo 'Caught exception: ',  $e->getMessage(), "<br/>";
+                                   }
 
                                 endif;
                             
@@ -142,4 +175,4 @@ foreach($remindInDays as $remainingDays) :
     endif;
 endforeach;
 
-// echo '<br/>Ending script';
+//echo '<br/>Ending script';

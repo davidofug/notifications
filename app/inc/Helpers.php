@@ -79,3 +79,53 @@ function getRows( $connection, string $sql, string $item= null, string $queryTyp
 
     return $rows;
 }
+
+function logToEmail($emailAddress='', $poster ='SendGrid', $chunk=null) {
+    if($emailAddress) :
+
+        if($poster=='SendGrid'):
+            $email = new \SendGrid\Mail\Mail();
+            $email->setFrom($emailAddress, "Gagawala Cloud Ways");
+            $email->setSubject("Sending with SendGrid is Fun");
+            $email->addTo("wampambadavid@gmail.com", "David Wampamba");
+            $email->addContent(
+                "text/plain", "and easy to do anywhere, even with PHP"
+            );
+            $email->addContent(
+                "text/html", "<strong>and easy to do anywhere, even with PHP</strong>"
+            );
+            //$sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+            $sendgrid = new \SendGrid('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');
+            try {
+                $response = $sendgrid->send($email);
+                print $response->statusCode() . "\n";
+                print_r($response->headers());
+                print $response->body() . "\n";
+            } catch (Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        endif;
+    endif;
+}
+
+function logToFile($filePath='', $chunk) {
+    if($filePath) return $filePath;
+
+    return false;
+}
+
+function logToPhone($phone, $chunk) {
+    if($phone) return $phone;
+
+    return false;
+}
+
+function chunkToLog( string $chunk) {
+    if($chunk) {
+
+        return $chunk;
+
+    }
+
+    return false;
+}
