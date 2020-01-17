@@ -24,6 +24,11 @@ endforeach;
 
 $payStr = join($instructions,'');
 
+$dotenv = Dotenv\Dotenv::create(__DIR__.'/config');
+$dotenv->load();
+
+objectPrettyPrint($_ENV);
+
 foreach($remindInDays as $remainingDays) :
 
     $sessionInternetbs = curlSession('https://api.internet.bs/Domain/List',

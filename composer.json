@@ -17,5 +17,8 @@
         "files": [
             "app/inc/Helpers.php"
         ]
+    },
+    "require-dev": {
+        "vlucas/phpdotenv": "^4.1@dev"
     }
 }
