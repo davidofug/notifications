@@ -3,9 +3,9 @@ require_once '../vendor/autoload.php';
 
 //echo 'Starting script<br/>';
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 //logToEmail($email='davidwampamba@gmail.com');
 
